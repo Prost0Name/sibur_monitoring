@@ -9,6 +9,13 @@ app = Flask(__name__)
 async def home():
     return render_template('home.html')
 
+@app.route('/registration')
+async def registration():
+    return render_template('registration.html')
+
+@app.route('/authorization')
+async def authorization():
+    return render_template('authorization.html')
 
 @app.route('/form')
 async def form():

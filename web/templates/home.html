@@ -20,6 +20,7 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
 
         /* Шапка сайта */
@@ -95,6 +96,27 @@
             font-size: 1rem;
         }
 
+        .button-registration{
+            background-color: #0f4848; /* Новый цвет для кнопок */
+            color: white;
+            padding: 20px 40px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+            border: none;
+            border: 2px;
+            height: 60px;
+            margin-top: 20px;
+        }
+
+        .button-registration:hover {
+            background-color: #0f4848; /* Темнее при наведении */
+            transform: scale(1.015);
+        }
+
         /* Адаптивность */
         @media (max-width: 768px) {
             .button-container {
@@ -116,8 +138,12 @@
 <body>
 
     <!-- Шапка сайта -->
-    <header>
+    <header style="display: flex;
+    justify-content: flex-end; 
+    margin-top: 20px; ">
         <h1>Система оповещения проблем</h1>
+        <button class="button-registration" onclick="window.location.href='/authorization'">Войти</button>
+        <button class="button-registration" onclick="window.location.href='/registration'">Регистрация</button>
     </header>
 
     <!-- Основной контент -->
