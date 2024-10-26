@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система оповещения проблем</title>
     <style>
         /* Основной сброс стилей */
         * {
@@ -20,7 +19,6 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
         }
 
         /* Шапка сайта */
@@ -32,6 +30,44 @@
             font-size: 2rem;
             width: 100%;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative; /* Для позиционирования кнопки */
+        }
+
+        /* Логотип */
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 20px; /* Отступ слева */
+            height: 60px; /* Высота логотипа */
+            width: auto; /* Автоматическая ширина для пропорций */
+        }
+
+        /* Контейнер для кнопки входа / имени пользователя */
+        .user-info {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Стиль кнопки входа или выхода */
+        .user-info .button {
+            background-color: #026b6b;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-info .button:hover {
+            background-color: #024f4f;
         }
 
         /* Основной контейнер */
@@ -57,13 +93,14 @@
         /* Блок для кнопок */
         .button-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* Центрируем кнопки */
             width: 100%;
             max-width: 600px;
+            gap: 35px; /* Уменьшаем расстояние между кнопками */
         }
 
         /* Кнопки */
-        .button {
+        .button-container .button {
             background-color: #02818a; /* Новый цвет для кнопок */
             color: white;
             padding: 20px 40px;
@@ -76,9 +113,9 @@
             border: none;
         }
 
-        .button:hover {
+        .button-container .button:hover {
             background-color: #026b6b; /* Темнее при наведении */
-            transform: scale(1.015);
+            transform: scale(1.05);
         }
 
         /* Футер */
@@ -94,27 +131,6 @@
         footer p {
             margin: 0;
             font-size: 1rem;
-        }
-
-        .button-registration{
-            background-color: #0f4848; /* Новый цвет для кнопок */
-            color: white;
-            padding: 20px 40px;
-            text-decoration: none;
-            font-size: 1.5rem;
-            border-radius: 50px;
-            display: inline-block;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            cursor: pointer;
-            border: none;
-            border: 2px;
-            height: 60px;
-            margin-top: 20px;
-        }
-
-        .button-registration:hover {
-            background-color: #0f4848; /* Темнее при наведении */
-            transform: scale(1.015);
         }
 
         /* Адаптивность */
@@ -138,12 +154,19 @@
 <body>
 
     <!-- Шапка сайта -->
-    <header style="display: flex;
-    justify-content: flex-end; 
-    margin-top: 20px; ">
-        <h1>Система оповещения проблем</h1>
-        <button class="button-registration" onclick="window.location.href='/authorization'">Войти</button>
-        <button class="button-registration" onclick="window.location.href='/registration'">Регистрация</button>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" style="width: 90px; height: auto;" class="logo">
+        <h1></h1>
+
+        <!-- Блок для кнопки входа или имени пользователя -->
+        <div class="user-info">
+            {% if g.user_name %}
+                <span>{{ g.user_name }}</span>
+                <a href="{{ url_for('logout') }}" class="button">Выход</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="button">Вход</a>
+            {% endif %}
+        </div>
     </header>
 
     <!-- Основной контент -->

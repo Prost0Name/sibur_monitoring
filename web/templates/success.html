@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Success</title>
+    <title>Успех</title>
     <style>
         /* Сброс стилей */
         * {
@@ -16,30 +16,42 @@
         /* Основные стили страницы */
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            background: linear-gradient(135deg, #e9f1f5, #d5e6f1); /* Похожий градиент */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #fff;
+            color: #333;
             text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
         }
 
         h1 {
             font-size: 2.5rem;
             margin-bottom: 20px;
+            color: #02818a; /* Тот же оттенок */
         }
 
         p {
             font-size: 1.2rem;
             margin-bottom: 30px;
+            color: #555;
         }
 
         /* Кнопка для возврата на главную */
         .btn {
             display: inline-block;
-            background-color: #fff;
-            color: #2575fc;
+            background-color: #02818a; /* Цвет кнопки */
+            color: #fff;
             padding: 15px 30px;
             font-size: 1.2rem;
             font-weight: bold;
@@ -50,8 +62,7 @@
         }
 
         .btn:hover {
-            background-color: #2575fc;
-            color: #fff;
+            background-color: #026b6b;
             transform: scale(1.05);
         }
 
@@ -82,12 +93,12 @@
 </head>
 <body>
 
-    <div>
+    <div class="container">
         <h1>Форма успешно отправлена!</h1>
         <p>Ваши данные были успешно добавлены.</p>
 
         <!-- Кнопка для возврата на главную страницу -->
-        <a href="/" class="btn">На главую</a>
+        <a href="/" class="btn">На главную</a>
     </div>
 
 </body>

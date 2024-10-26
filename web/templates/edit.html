@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Problem</title>
+    <title>Редактировать проблему</title>
     <style>
         /* Сброс стилей */
         * {
@@ -16,15 +16,16 @@
         /* Основные стили страницы */
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            background: linear-gradient(135deg, #e9f1f5, #d5e6f1); /* Фон с градиентом */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #fff;
+            color: #333;
         }
 
         h1 {
+            color: #02818a; /* Цвет заголовка */
             font-size: 2.5rem;
             margin-bottom: 20px;
             text-align: center;
@@ -32,48 +33,43 @@
 
         /* Контейнер для формы */
         #formDiv {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: #fff;
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 400px;
+            max-width: 600px;
+            text-align: left;
         }
 
         label {
             font-size: 1.2rem;
             margin-bottom: 10px;
             display: block;
+            color: #02818a; /* Цвет текста меток */
         }
 
         select, input[type="text"], textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
-            border: none;
+            border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 1rem;
-        }
-
-        select {
-            background-color: #fff;
-            color: #333;
-        }
-
-        input[type="text"], textarea {
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: #f9f9f9;
             color: #333;
         }
 
         input[type="text"]:focus, textarea:focus, select:focus {
             outline: none;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            border-color: #02818a; /* Цвет рамки при фокусе */
+            box-shadow: 0 0 5px rgba(2, 129, 138, 0.5);
         }
 
         /* Кнопки Submit и Home */
         .button {
-            background-color: #fff;
-            color: #2575fc;
+            background-color: #02818a; /* Цвет кнопки */
+            color: #fff;
             border: none;
             padding: 15px;
             font-size: 1.2rem;
@@ -87,8 +83,7 @@
         }
 
         .button:hover {
-            background-color: #2575fc;
-            color: #fff;
+            background-color: #026b6b; /* Цвет при наведении */
             transform: scale(1.05);
         }
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма</title>
+    <title>Регистрация</title>
     <style>
         /* Сброс стилей */
         * {
@@ -16,7 +16,7 @@
         /* Основные стили страницы */
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #e9f1f5, #d5e6f1); /* Фон с градиентом */
+            background: linear-gradient(135deg, #e9f1f5, #d5e6f1);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,7 +25,7 @@
         }
 
         h1 {
-            color: #02818a; /* Цвет заголовка */
+            color: #02818a;
             font-size: 2.5rem;
             margin-bottom: 20px;
             text-align: center;
@@ -46,10 +46,10 @@
             font-size: 1.2rem;
             margin-bottom: 10px;
             display: block;
-            color: #02818a; /* Цвет текста меток */
+            color: #02818a;
         }
 
-        select, input[type="text"], textarea {
+        input[type="text"], input[type="password"], input[type="email"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -60,15 +60,15 @@
             color: #333;
         }
 
-        input[type="text"]:focus, textarea:focus, select:focus {
+        input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
             outline: none;
-            border-color: #02818a; /* Цвет рамки при фокусе */
+            border-color: #02818a;
             box-shadow: 0 0 5px rgba(2, 129, 138, 0.5);
         }
 
-        /* Кнопки Submit и Home */
+        /* Кнопка отправки формы */
         .button {
-            background-color: #02818a; /* Цвет кнопки */
+            background-color: #02818a;
             color: #fff;
             border: none;
             padding: 15px;
@@ -83,21 +83,12 @@
         }
 
         .button:hover {
-            background-color: #026b6b; /* Цвет при наведении */
+            background-color: #026b6b;
             transform: scale(1.05);
         }
 
         .button:focus {
             outline: none;
-        }
-
-        footer {
-            background-color: #02818a; /* Новый цвет для футера */
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            width: 100%;
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
         }
 
         /* Адаптивность для мобильных устройств */
@@ -119,30 +110,24 @@
 <body>
 
     <div id="formDiv">
-        <h1>Заполните форму</h1>
+        <h1>Регистрация</h1>
 
-        <!-- Форма для отправки данных -->
-        <form method="POST" action="/submit">
-            <label for="priority">Вид:</label>
-            <select id="priority" name="priority">
-                <option value="INFO">Информационная</option>
-                <option value="WARN">Предупреждающая</option>
-                <option value="CRIT">Критическая</option>
-            </select>
+        <!-- Форма регистрации -->
+        <form method="POST" action="/register">
+            <label for="full_name">ФИО:</label>
+            <input type="text" id="full_name" name="full_name" required>
 
-            <!-- Поле description как однострочное текстовое поле -->
-            <label for="description">Проблема:</label>
-            <input type="text" id="description" name="description" required>
+            <label for="email">Электронная почта:</label>
+            <input type="email" id="email" name="email" required>
 
-            <!-- Поле message как многострочное текстовое поле -->
-            <label for="message">Описание:</label>
-            <textarea id="message" name="message" rows="4" cols="50" required></textarea>
+            <label for="login">Логин:</label>
+            <input type="text" id="login" name="login" required>
 
-            <input type="submit" value="Отправить" class="button">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit" class="button">Регистрация</button>
         </form>
-
-        <!-- Кнопка для возврата на главную страницу -->
-        <button class="button" onclick="window.location.href='/'">На главную</button>
     </div>
 
 </body>

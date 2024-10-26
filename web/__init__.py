@@ -1,35 +1,111 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, g, redirect, url_for, flash, session
 from database.models import Problems, Person
 import datetime
+from functools import wraps
 
 app = Flask(__name__)
+app.secret_key = 'aP9*3xL0#VmZ!8pQ$7kFs'
+
+
+def login_required(f):
+    @wraps(f)
+    async def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash('You need to be logged in')
+            return redirect(url_for('login'))
+        return await f(*args, **kwargs)
+
+    return decorated_function
+
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    flash('You have been logged out')
+    return redirect(url_for('login'))
+
+
+@app.route('/register', methods=['GET', 'POST'])
+async def register():
+    if request.method == 'POST':
+        login = request.form.get('login')
+        password = request.form.get('password')
+        full_name = request.form.get('full_name')
+        email = request.form.get('email')  # Новое поле электронной почты
+
+        # Проверяем, существует ли уже такой логин
+        existing_user = await Person.filter(login=login).first()
+        if existing_user:
+            flash('Login already taken')
+            return render_template('register.html')
+
+        # Создаём нового пользователя
+        new_user = Person(
+            login=login,
+            full_name=full_name,
+            email=email  # Сохраняем адрес электронной почты
+        )
+        new_user.set_password(password)  # Хешируем и устанавливаем пароль
+        await new_user.save()
+
+        flash('Registration successful, please log in.')
+        return redirect('/login')
+
+    return render_template('register.html')
+
+
+
+@app.route('/login', methods=['GET', 'POST'])
+async def login():
+    if request.method == 'POST':
+        login = request.form.get('login')
+        password = request.form.get('password')
+
+        # Ищем пользователя по логину
+        user = await Person.filter(login=login).first()
+        if user and user.check_password(password):
+            session['user_id'] = user.id
+            flash('Login successful')
+            return redirect(url_for('home'))
+
+        flash('Invalid credentials')
+
+    return render_template('login.html')
+
+
+@app.before_request
+async def load_user():
+    user_id = session.get('user_id')  # Берём id пользователя из сессии
+    g.user_name = None  # Задаём значение по умолчанию
+    if user_id:
+        try:
+            user = await Person.get(id=user_id)  # Ищем пользователя в базе данных
+            if user:
+                g.user_name = user.full_name  # Сохраняем имя пользователя в g
+        except Exception as e:
+            pass
+
 
 
 @app.route('/')
 async def home():
     return render_template('home.html')
 
-@app.route('/registration')
-async def registration():
-    return render_template('registration.html')
-
-@app.route('/authorization')
-async def authorization():
-    return render_template('authorization.html')
 
 @app.route('/form')
+@login_required
 async def form():
     return render_template('form.html')
 
 
 @app.route('/submit', methods=['POST'])
+@login_required
 async def submit():
     priority = request.form.get('priority')
     description = request.form.get('description')
     message = request.form.get('message')
 
-    await Problems.create(priority=priority, description=description, message=message, status="START",
-                          time=datetime.datetime.now())
+    await Problems.create(priority=priority, description=description, message=message, status="START")
 
     return render_template('success.html')
 
@@ -42,26 +118,28 @@ async def show():
     in_progress_data = []
     end_data = []
 
-    if tab == 'start':
-        problems = await Problems.filter(status='START').values()
-        for v in problems:
-            start_data.append([v['description'], v['message'], v['time'], v['id'], 1])
+    sorter = {
+        "INFO": 0,
+        "WARN": 1,
+        "CRIT": 2,
+    }
 
-        start_data.sort(key=lambda x: x[2], reverse=True)
+    if tab == 'start':
+        problems = await Problems.filter(status='START')
+        for v in problems:
+            start_data.append([v.description, v.message, v.time, v.id, v.priority])
+        start_data.sort(key=lambda x: (sorter[x[4]], x[2]), reverse=True)
 
     elif tab == 'in_progress':
-        problems = await Problems.filter(status='IN_PROGRESS').all()
+        problems = await Problems.filter(status='IN_PROGRESS')
         for v in problems:
-            in_progress_data.append([v.description, v.message, v.time, v.id, "<no>" if not v.responsible else (await v.responsible.first()).full_name])
-
-        in_progress_data.sort(key=lambda x: x[2], reverse=True)
+            in_progress_data.append([v.description, v.message, v.time, v.id, v.priority, "<no>" if not v.responsible else (await v.responsible.first()).full_name])
+        in_progress_data.sort(key=lambda x: (sorter[x[4]], x[2]), reverse=True)
 
     elif tab == 'end':
-        problems = await Problems.filter(status='END').all()
-        
+        problems = await Problems.filter(status='END')
         for v in problems:
-            end_data.append([v.description, v.message, v.time, v.id, "<no>" if not v.responsible else (await v.responsible.first()).full_name])
-
+            end_data.append([v.description, v.message, v.time, v.id, v.priority, "<no>" if not v.responsible else (await v.responsible.first()).full_name])
         end_data.sort(key=lambda x: x[2], reverse=True)
 
     return render_template('show.html',
@@ -72,6 +150,7 @@ async def show():
 
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 async def edit(id):
     problem = await Problems.get(id=id)
     if request.method == 'POST':
@@ -86,15 +165,18 @@ async def edit(id):
 
 
 @app.route('/take/<int:problem_id>', methods=['POST'])
+@login_required
 async def take_problem(problem_id):
     problem = await Problems.get(id=problem_id)
     if problem:
         problem.status = 'IN_PROGRESS'
+        problem.responsible = await Person.get(id=session.get('user_id'))
         await problem.save()
     return redirect('/show?tab=start')  # Возвращаемся на вкладку "Ждут действий"
 
 
 @app.route('/solve/<int:problem_id>', methods=['POST'])
+@login_required
 async def solve_problem(problem_id):
     problem = await Problems.get(id=problem_id)
     if problem:
@@ -103,5 +185,16 @@ async def solve_problem(problem_id):
     return redirect('/show?tab=in_progress')  # Возвращаемся на вкладку "В процессе"
 
 
+@app.route('/reopen/<int:problem_id>', methods=['POST'])
+@login_required
+async def reopen_problem(problem_id):
+    problem = await Problems.get(id=problem_id)
+    if problem:
+        problem.status = 'IN_PROGRESS'  # Меняем статус задачи на "Решено"
+        problem.responsible = await Person.get(id=session.get('user_id'))
+        await problem.save()
+    return redirect('/show?tab=end')
+
+
 def setup():
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(host='127.0.0.1', port=8080, debug=True)

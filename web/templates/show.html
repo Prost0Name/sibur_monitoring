@@ -19,8 +19,9 @@
             color: #333;
             padding: 20px;
             display: flex;
-            flex-direction: column;
+            flex-direction: column; /* Элементы выстраиваются в столбик */
             align-items: center; /* Центрирование содержимого */
+            min-height: 100vh; /* Минимальная высота 100% от высоты экрана */
         }
 
         h1, h2 {
@@ -58,7 +59,7 @@
             outline: none;
         }
 
-        /* Контейнер карточек */
+        /* Стиль карточек с разными уровнями */
         .card {
             background-color: #fff;
             border: 1px solid #ddd;
@@ -69,6 +70,10 @@
             width: 100%; /* Ширина карточки */
             max-width: 600px; /* Максимальная ширина карточки */
         }
+
+        .warn { border-left: 5px solid #f4b400; }  /* Желтый для WARN */
+        .info { border-left: 5px solid #4285f4; }  /* Синий для INFO */
+        .crit { border-left: 5px solid #ea4335; }  /* Красный для CRIT */
 
         .card h2 {
             color: #333;
@@ -104,13 +109,9 @@
             margin-top: auto; /* Футер внизу страницы */
         }
 
-        footer {
-            background-color: #02818a; /* Новый цвет для футера */
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            width: 100%;
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+        footer p {
+            margin: 0;
+            font-size: 1rem;
         }
 
         /* Адаптивность */
@@ -139,7 +140,9 @@
     </style>
 </head>
 <body>
-
+    <a href="/">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" style="width: 150px; height: auto;" class="logo">
+    </a>
     <h1>Проблемы</h1>
 
     <!-- Кнопки для переключения вкладок -->
@@ -147,17 +150,17 @@
         <a href="/show?tab=start" class="button">Ждут действий</a>
         <a href="/show?tab=in_progress" class="button">В процессе</a>
         <a href="/show?tab=end" class="button">Решенные</a>
-        <a href="/" class="button">На главную</a>
     </div>
 
     <!-- Отображение проблем в зависимости от статуса -->
     {% if tab == 'start' %}
         <h2>Ждут действий</h2>
         {% for item in start_data %}
-            <div class="card">
+            <!-- Применяем класс в зависимости от значения item[4] -->
+            <div class="card {% if item[4] == 'WARN' %}warn{% elif item[4] == 'INFO' %}info{% elif item[4] == 'CRIT' %}crit{% endif %}">
                 <h2>{{ item[0] }}</h2>  <!-- Description -->
                 <p>{{ item[1] }}</p>    <!-- Message -->
-                <p><strong>Время:</strong> {{ item[2].strftime('%d-%m-%Y %H:%M:%S') }}</p> <!-- Время -->
+                <p><strong>От:</strong> {{ item[2].strftime('%Y-%m-%d %H:%M:%S') }}</p> <!-- Время -->
 
                 <!-- Кнопки "Редактировать" и "Взяться за решение" -->
                 <div class="card-buttons">
@@ -171,11 +174,12 @@
     {% elif tab == 'in_progress' %}
         <h2>В процессе</h2>
         {% for item in in_progress_data %}
-            <div class="card">
+            <div class="card {% if item[4] == 'WARN' %}warn{% elif item[4] == 'INFO' %}info{% elif item[4] == 'CRIT' %}crit{% endif %}">
                 <h2>{{ item[0] }}</h2>  <!-- Description -->
                 <p>{{ item[1] }}</p>    <!-- Message -->
-                <p><strong>Время:</strong> {{ item[2].strftime('%d-%m-%Y %H:%M:%S') }}</p> <!-- Время -->
-                <p><b>Ответственный: {{item[4]}}</b></p>
+                <p><strong>Ответственный:</strong> {{ item[5] }} </p>
+                <p><strong>От:</strong> {{ item[2].strftime('%Y-%m-%d %H:%M:%S') }}</p> <!-- Время -->
+
                 <!-- Кнопки "Редактировать" и "Решено" -->
                 <div class="card-buttons">
                     <a href="/edit/{{ item[3] }}" class="button">Редактировать</a>
@@ -188,14 +192,18 @@
     {% elif tab == 'end' %}
         <h2>Решенные</h2>
         {% for item in end_data %}
-            <div class="card">
+            <div class="card {% if item[4] == 'WARN' %}warn{% elif item[4] == 'INFO' %}info{% elif item[4] == 'CRIT' %}crit{% endif %}">
                 <h2>{{ item[0] }}</h2>  <!-- Description -->
                 <p>{{ item[1] }}</p>    <!-- Message -->
-                <p><strong>Время:</strong> {{ item[2].strftime('%d-%m-%Y %H:%M:%S') }}</p> <!-- Время -->
-                <p><b>Ответственный: {{item[4]}}</b></p>
-                <!-- Только кнопка "Редактировать" -->
+                <p><strong>Руководил:</strong> {{ item[5] }} </p>
+                <p><strong>От:</strong> {{ item[2].strftime('%Y-%m-%d %H:%M:%S') }}</p> <!-- Время -->
+
+                <!-- Кнопки "Редактировать" и "Вернуть в процесс" -->
                 <div class="card-buttons">
                     <a href="/edit/{{ item[3] }}" class="button">Редактировать</a>
+                    <form method="POST" action="/reopen/{{ item[3] }}" style="margin: 0;">
+                        <input type="submit" value="Вернуть в процесс" class="button">
+                    </form>
                 </div>
             </div>
         {% endfor %}
@@ -203,7 +211,7 @@
 
     <!-- Футер -->
     <footer>
-        <p>&copy; 2024 Система оповещения проблем. Все права защищены.</p>
+        <p>&copy; 2024 Система оповещения проблем.</p>
     </footer>
 
 </body>
