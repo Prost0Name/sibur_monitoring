@@ -114,36 +114,70 @@
                 padding: 12px;
             }
         }
+
+        /* Цвета для текста */
+        .info {
+            color: #4285f4;
+        }
+
+        .warn {
+            color: #f4b400;
+        }
+
+        .crit {
+            color: #ea4335;
+        }
     </style>
 </head>
 <body>
 
-    <div id="formDiv">
-        <h1>Редактировать проблему</h1>
+<div id="formDiv">
+    <h1>Редактировать проблему</h1>
 
-        <!-- Форма для редактирования проблемы -->
-        <form method="POST" action="/edit/{{ problem.id }}">
-            <label for="priority">Вид:</label>
-            <select id="priority" name="priority">
-                <option value="INFO" {% if problem.priority == 'INFO' %}selected{% endif %}>Информационная</option>
-                <option value="WARN" {% if problem.priority == 'WARN' %}selected{% endif %}>Предупреждающая</option>
-                <option value="CRIT" {% if problem.priority == 'CRIT' %}selected{% endif %}>Критическая</option>
-            </select>
+    <!-- Форма для редактирования проблемы -->
+    <form method="POST" action="/edit/{{ problem.id }}">
+        <label for="priority">Вид:</label>
+        <select id="priority" name="priority" onchange="changeColor()">
+            <option value="INFO" class="info" {% if problem.priority == 'INFO' %}selected{% endif %}>Информационная
+            </option>
+            <option value="WARN" class="warn" {% if problem.priority == 'WARN' %}selected{% endif %}>Предупреждающая
+            </option>
+            <option value="CRIT" class="crit" {% if problem.priority == 'CRIT' %}selected{% endif %}>Критическая
+            </option>
+        </select>
 
-            <!-- Поле description как однострочное текстовое поле -->
-            <label for="description">Проблема:</label>
-            <input type="text" id="description" name="description" value="{{ problem.description }}" required>
+        <!-- Поле description как однострочное текстовое поле -->
+        <label for="description">Проблема:</label>
+        <input type="text" id="description" name="description" value="{{ problem.description }}" required>
 
-            <!-- Поле message как многострочное текстовое поле -->
-            <label for="message">Описание:</label>
-            <textarea id="message" name="message" rows="4" cols="50" required>{{ problem.message }}</textarea>
+        <!-- Поле message как многострочное текстовое поле -->
+        <label for="message">Описание:</label>
+        <textarea id="message" name="message" rows="4" cols="50" required>{{ problem.message }}</textarea>
 
-            <input type="submit" value="Обновить" class="button">
-        </form>
+        <input type="submit" value="Обновить" class="button">
+    </form>
 
-        <!-- Кнопка для возврата на главную страницу -->
-        <button class="button" onclick="window.location.href='/show'">Отмена</button>
-    </div>
+    <!-- Кнопка для возврата на главную страницу -->
+    <button class="button" onclick="window.location.href='/show'">Отмена</button>
+</div>
 
+<script>
+    function changeColor() {
+        const select = document.getElementById('priority');
+        const selectedValue = select.value;
+
+        // Сброс стилей
+        Array.from(select.options).forEach(option => {
+            option.style.color = ''; // Сбрасываем цвет
+        });
+
+        // Устанавливаем цвет для выбранной опции
+        const selectedOption = select.options[select.selectedIndex];
+        select.style.color = getComputedStyle(selectedOption).color;
+    }
+
+    // Устанавливаем начальный цвет
+    document.addEventListener("DOMContentLoaded", changeColor);
+</script>
 </body>
 </html>

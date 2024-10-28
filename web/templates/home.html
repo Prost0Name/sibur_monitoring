@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        @media (max-width: 500px) {
+            .user-info {
+                flex-direction: column; /* Изменяем направление на вертикальное */
+                align-items: center; /* Центрируем содержимое */
+                position: static; /* Убираем абсолютное позиционирование */
+                margin-top: 10px; /* Добавляем отступ сверху */
+            }
+
+            .user-info span {
+                margin-bottom: 5px; /* Добавляем отступ между именем пользователя и кнопкой */
+            }
+        }
+
         /* Основной сброс стилей */
         * {
             margin: 0;
@@ -23,31 +36,32 @@
 
         /* Шапка сайта */
         header {
-            background-color: #02818a; /* Новый цвет для шапки */
+            background-color: #02818a;
             color: white;
             padding: 20px 0;
             text-align: center;
             font-size: 2rem;
             width: 100%;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative; /* Для позиционирования кнопки */
+            position: relative;
         }
 
         /* Логотип */
         .logo {
             position: absolute;
-            top: 10px;
-            left: 20px; /* Отступ слева */
-            height: 60px; /* Высота логотипа */
-            width: auto; /* Автоматическая ширина для пропорций */
+            top: 50%;
+            left: 20px;
+            height: 60px;
+            width: auto;
+            transform: translateY(-50%);
         }
 
         /* Контейнер для кнопки входа / имени пользователя */
         .user-info {
             position: absolute;
-            top: 10px;
+            top: 50%;
             right: 20px;
-            font-size: 1rem;
+            transform: translateY(-50%);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -75,7 +89,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px;
-            flex-grow: 1; /* Этот блок занимает оставшееся пространство */
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -85,7 +99,7 @@
         /* Заголовок страницы */
         h1 {
             font-size: 3rem;
-            color: #02818a; /* Тот же цвет для заголовка */
+            color: #02818a;
             margin-bottom: 50px;
             text-align: center;
         }
@@ -93,15 +107,15 @@
         /* Блок для кнопок */
         .button-container {
             display: flex;
-            justify-content: center; /* Центрируем кнопки */
+            justify-content: center;
             width: 100%;
             max-width: 600px;
-            gap: 35px; /* Уменьшаем расстояние между кнопками */
+            gap: 35px;
         }
 
         /* Кнопки */
         .button-container .button {
-            background-color: #02818a; /* Новый цвет для кнопок */
+            background-color: #02818a;
             color: white;
             padding: 20px 40px;
             text-decoration: none;
@@ -114,18 +128,23 @@
         }
 
         .button-container .button:hover {
-            background-color: #026b6b; /* Темнее при наведении */
+            background-color: #026b6b;
             transform: scale(1.05);
         }
 
         /* Футер */
         footer {
-            background-color: #02818a; /* Новый цвет для футера */
+            background-color: #02818a;
             color: white;
             text-align: center;
             padding: 20px 0;
             width: 100%;
             box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info span {
+            font-size: 1rem; /* Выберите нужный размер */
+            color: #f0f0f0; /* Цвет, если требуется */
         }
 
         footer p {
@@ -153,35 +172,35 @@
 </head>
 <body>
 
-    <!-- Шапка сайта -->
-    <header>
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" style="width: 90px; height: auto;" class="logo">
-        <h1></h1>
+<!-- Шапка сайта -->
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" class="logo">
+    <h1></h1>
 
-        <!-- Блок для кнопки входа или имени пользователя -->
-        <div class="user-info">
-            {% if g.user_name %}
-                <span>{{ g.user_name }}</span>
-                <a href="{{ url_for('logout') }}" class="button">Выход</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="button">Вход</a>
-            {% endif %}
-        </div>
-    </header>
-
-    <!-- Основной контент -->
-    <div class="container">
-        <h1>Добро пожаловать в СОП</h1>
-        <div class="button-container">
-            <button class="button" onclick="window.location.href='/form'">Сообщить</button>
-            <button class="button" onclick="window.location.href='/show'">Посмотреть</button>
-        </div>
+    <!-- Блок для кнопки входа или имени пользователя -->
+    <div class="user-info">
+        {% if g.user_name %}
+            <span>{{ g.user_name }}</span>
+            <a href="{{ url_for('logout') }}" class="button">Выход</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="button">Вход</a>
+        {% endif %}
     </div>
+</header>
 
-    <!-- Футер -->
-    <footer>
-        <p>&copy; 2024 Система оповещения проблем. Все права защищены.</p>
-    </footer>
+<!-- Основной контент -->
+<div class="container">
+    <h1>Добро пожаловать в CAS</h1>
+    <div class="button-container">
+        <button class="button" onclick="window.location.href='/form'">Сообщить</button>
+        <button class="button" onclick="window.location.href='/show'">Посмотреть</button>
+    </div>
+</div>
+
+<!-- Футер -->
+<footer>
+    <p>&copy; 2024 Система оповещения проблем. Все права защищены.</p>
+</footer>
 
 </body>
 </html>

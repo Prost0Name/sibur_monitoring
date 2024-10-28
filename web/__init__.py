@@ -1,5 +1,7 @@
+import os
+
 from flask import Flask, render_template, request, g, redirect, url_for, flash, session
-from database.models import Problems, Person
+from database.models import Problems, Person, Type
 import datetime
 from functools import wraps
 
@@ -31,28 +33,31 @@ async def register():
         login = request.form.get('login')
         password = request.form.get('password')
         full_name = request.form.get('full_name')
-        email = request.form.get('email')  # Новое поле электронной почты
+        email = request.form.get('email')
+        type_id = request.form.get('type')
 
         # Проверяем, существует ли уже такой логин
         existing_user = await Person.filter(login=login).first()
         if existing_user:
             flash('Login already taken')
-            return render_template('register.html')
+            return render_template('register.html', types=await Type.all())  # Передаем список типов
 
-        # Создаём нового пользователя
+        # Создаем нового пользователя с выбранной должностью
         new_user = Person(
             login=login,
             full_name=full_name,
-            email=email  # Сохраняем адрес электронной почты
+            email=email,
+            type_id=type_id
         )
-        new_user.set_password(password)  # Хешируем и устанавливаем пароль
+        new_user.set_password(password)
         await new_user.save()
 
         flash('Registration successful, please log in.')
         return redirect('/login')
 
-    return render_template('register.html')
-
+    # Получаем список всех должностей для отображения
+    types = await Type.all()
+    return render_template('register.html', types=types)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -86,7 +91,6 @@ async def load_user():
             pass
 
 
-
 @app.route('/')
 async def home():
     return render_template('home.html')
@@ -95,7 +99,8 @@ async def home():
 @app.route('/form')
 @login_required
 async def form():
-    return render_template('form.html')
+    types = await Type.all()
+    return render_template('form.html', types=types)
 
 
 @app.route('/submit', methods=['POST'])
@@ -104,9 +109,9 @@ async def submit():
     priority = request.form.get('priority')
     description = request.form.get('description')
     message = request.form.get('message')
+    type_id = request.form.get('type')
 
-    await Problems.create(priority=priority, description=description, message=message, status="START")
-
+    await Problems.create(priority=priority, description=description, message=message, type_id=type_id, status="START")
     return render_template('success.html')
 
 
@@ -133,13 +138,15 @@ async def show():
     elif tab == 'in_progress':
         problems = await Problems.filter(status='IN_PROGRESS')
         for v in problems:
-            in_progress_data.append([v.description, v.message, v.time, v.id, v.priority, "<no>" if not v.responsible else (await v.responsible.first()).full_name])
+            in_progress_data.append([v.description, v.message, v.time, v.id, v.priority,
+                                     "<no>" if not v.responsible else (await v.responsible.first()).full_name])
         in_progress_data.sort(key=lambda x: (sorter[x[4]], x[2]), reverse=True)
 
     elif tab == 'end':
         problems = await Problems.filter(status='END')
         for v in problems:
-            end_data.append([v.description, v.message, v.time, v.id, v.priority, "<no>" if not v.responsible else (await v.responsible.first()).full_name])
+            end_data.append([v.description, v.message, v.time, v.id, v.priority,
+                             "<no>" if not v.responsible else (await v.responsible.first()).full_name])
         end_data.sort(key=lambda x: x[2], reverse=True)
 
     return render_template('show.html',
@@ -197,4 +204,4 @@ async def reopen_problem(problem_id):
 
 
 def setup():
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host=os.getenv("URL"), port=os.getenv("PORT"), debug=True)

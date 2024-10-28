@@ -24,11 +24,22 @@
             color: #333;
         }
 
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 90px;
+            height: auto;
+            margin-right: 15px;
+        }
+
         h1 {
             color: #02818a;
             font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-align: center;
         }
 
         /* Контейнер для формы */
@@ -109,23 +120,28 @@
 </head>
 <body>
 
-    <div id="formDiv">
+<div id="formDiv">
+    <div class="header">
+        <a href="/">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" class="logo">
+        </a>
         <h1>Вход</h1>
-
-        <!-- Форма входа -->
-        <form method="POST" action="/login">
-            <label for="login">Логин:</label>
-            <input type="text" id="login" name="login" required>
-
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit" class="button">Войти</button>
-
-            <!-- Кнопка для перехода на страницу регистрации -->
-            <button type="button" class="button" onclick="window.location.href='/register'">Регистрация</button>
-        </form>
     </div>
+
+    <!-- Форма входа -->
+    <form method="POST" action="/login">
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login" required>
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit" class="button">Войти</button>
+
+        <!-- Кнопка для перехода на страницу регистрации -->
+        <button type="button" class="button" onclick="window.location.href='/register'">Регистрация</button>
+    </form>
+</div>
 
 </body>
 </html>

@@ -24,11 +24,22 @@
             color: #333;
         }
 
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 90px;
+            height: auto;
+            margin-right: 15px;
+        }
+
         h1 {
             color: #02818a;
             font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-align: center;
         }
 
         /* Контейнер для формы */
@@ -49,7 +60,7 @@
             color: #02818a;
         }
 
-        input[type="text"], input[type="password"], input[type="email"] {
+        input[type="text"], input[type="password"], input[type="email"], select {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -60,7 +71,7 @@
             color: #333;
         }
 
-        input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
+        input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, select:focus {
             outline: none;
             border-color: #02818a;
             box-shadow: 0 0 5px rgba(2, 129, 138, 0.5);
@@ -109,26 +120,40 @@
 </head>
 <body>
 
-    <div id="formDiv">
+<div id="formDiv">
+    <div class="header">
+        <a href="/">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" class="logo">
+        </a>
         <h1>Регистрация</h1>
-
-        <!-- Форма регистрации -->
-        <form method="POST" action="/register">
-            <label for="full_name">ФИО:</label>
-            <input type="text" id="full_name" name="full_name" required>
-
-            <label for="email">Электронная почта:</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="login">Логин:</label>
-            <input type="text" id="login" name="login" required>
-
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit" class="button">Регистрация</button>
-        </form>
     </div>
+
+    <!-- Форма регистрации -->
+    <form method="POST" action="/register">
+        <label for="full_name">ФИО:</label>
+        <input type="text" id="full_name" name="full_name" required>
+
+        <label for="email">Электронная почта:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login" required>
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="type">Тип:</label>
+        <select id="type" name="type" required
+                style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; background-color: #f9f9f9; color: #333;">
+            {% for type in types %}
+                <option value="{{ type.id }}" style="color: #333;">{{ type.full_name }}</option>
+            {% endfor %}
+        </select>
+
+
+        <button type="submit" class="button">Регистрация</button>
+    </form>
+</div>
 
 </body>
 </html>

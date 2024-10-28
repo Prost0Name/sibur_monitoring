@@ -5,6 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Проблемы</title>
     <style>
+        @media (max-width: 500px) {
+            header {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: auto;
+                padding: 15px 10px;
+            }
+
+            /* Логотип адаптируем для центрирования */
+            .logo {
+                position: static; /* убираем абсолютное позиционирование */
+                height: 50px;
+                margin-bottom: 10px; /* добавляем отступ снизу */
+            }
+
+            /* Центрирование и вертикальное расположение элементов .user-info */
+            .user-info {
+                flex-direction: column;
+                align-items: center;
+                position: static; /* убираем абсолютное позиционирование */
+                gap: 5px; /* добавляем промежуток между элементами */
+            }
+
+            .user-info span {
+                font-size: 1rem;
+            }
+        }
+
         /* Общие сбросы */
         * {
             margin: 0;
@@ -15,17 +45,69 @@
         /* Основной стиль страницы */
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #e9f1f5, #d5e6f1); /* Новый фон */
+            background: linear-gradient(135deg, #e9f1f5, #d5e6f1);
             color: #333;
-            padding: 20px;
+            padding: 0;
             display: flex;
-            flex-direction: column; /* Элементы выстраиваются в столбик */
-            align-items: center; /* Центрирование содержимого */
-            min-height: 100vh; /* Минимальная высота 100% от высоты экрана */
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
 
+        /* Шапка сайта */
+        header {
+            background-color: #02818a;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 2rem;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 90px;
+        }
+
+        /* Логотип */
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            height: 60px;
+            width: auto;
+            transform: translateY(-50%);
+        }
+
+        /* Контейнер для кнопки входа / имени пользователя */
+        .user-info {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Стиль кнопки входа или выхода */
+        .user-info .button {
+            background-color: #026b6b;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-info .button:hover {
+            background-color: #024f4f;
+        }
+
+        /* Заголовок страницы */
         h1, h2 {
-            color: #02818a; /* Цвет заголовков */
+            color: #02818a;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -34,17 +116,17 @@
         .button-container {
             display: flex;
             justify-content: center;
+            margin-top: 20px;
             margin-bottom: 30px;
             gap: 15px;
         }
 
         .button {
-            background-color: #02818a; /* Цвет кнопок */
+            background-color: #02818a;
             color: #fff;
             border: none;
             padding: 10px 20px;
             font-size: 1rem;
-            text-transform: uppercase;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
@@ -52,14 +134,9 @@
         }
 
         .button:hover {
-            background-color: #026b6b; /* Темнее при наведении */
+            background-color: #026b6b;
         }
 
-        .button:focus {
-            outline: none;
-        }
-
-        /* Стиль карточек с разными уровнями */
         .card {
             background-color: #fff;
             border: 1px solid #ddd;
@@ -67,13 +144,21 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%; /* Ширина карточки */
-            max-width: 600px; /* Максимальная ширина карточки */
+            width: 100%;
+            max-width: 600px;
         }
 
-        .warn { border-left: 5px solid #f4b400; }  /* Желтый для WARN */
-        .info { border-left: 5px solid #4285f4; }  /* Синий для INFO */
-        .crit { border-left: 5px solid #ea4335; }  /* Красный для CRIT */
+        .warn {
+            border-left: 8px solid #f4b400;
+        }
+
+        .info {
+            border-left: 8px solid #4285f4;
+        }
+
+        .crit {
+            border-left: 8px solid #ea4335;
+        }
 
         .card h2 {
             color: #333;
@@ -86,32 +171,42 @@
             margin-bottom: 10px;
         }
 
-        /* Кнопки внутри карточек */
         .card-buttons {
             display: flex;
             gap: 10px;
         }
 
-        .card .button {
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
-
         /* Футер */
         footer {
-            background-color: #02818a; /* Цвет футера */
+            background-color: #02818a;
             color: white;
             text-align: center;
             padding: 20px 0;
             width: 100%;
             box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
-            margin-top: auto; /* Футер внизу страницы */
+            margin-top: auto;
+            position: relative;
         }
 
         footer p {
             margin: 0;
             font-size: 1rem;
+        }
+
+        .username {
+            font-size: 1rem;
+            color: white;
+        }
+
+        .card-buttons {
+            align-items: flex-start;
+        }
+
+        .card h2, .card p, .username, .user-info span {
+            overflow-wrap: break-word; /* Перенос длинных слов */
+            word-wrap: break-word; /* Совместимость со старыми браузерами */
+            word-break: break-word; /* Перенос длинного текста */
+            hyphens: auto; /* Автоматически добавлять дефисы для длинных слов */
         }
 
         /* Адаптивность */
@@ -121,30 +216,107 @@
             }
 
             .button {
+                width: 90%; /* Ширина кнопки чуть меньше 100% */
+                min-width: 150px; /* Минимальная ширина кнопки */
                 font-size: 0.9rem;
                 padding: 8px 15px;
+                margin: 0 auto; /* Центрируем кнопку */
+            }
+
+            .button-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+                margin-bottom: 30px;
+                gap: 15px; /* Промежуток между кнопками */
+            }
+
+            /* Установите min-width для кнопок */
+            .button-container .button {
+                width: auto; /* Позволяет кнопкам адаптироваться */
+                min-width: 95vw; /* Минимальная ширина кнопок 95% от ширины окна просмотра */
+                max-width: 100%; /* Ограничиваем максимальную ширину */
+                text-align: center; /* Выравнивание текста по центру */
+                padding: 10px 20px; /* Отступы внутри кнопки */
+                font-size: 0.9rem; /* Размер шрифта */
+                border-radius: 5px; /* Скругленные углы */
+                cursor: pointer; /* Указатель для курсора */
+                transition: background-color 0.3s ease; /* Плавный переход для цвета фона */
+                background-color: #02818a; /* Фоновый цвет кнопки */
+                color: #fff; /* Цвет текста */
+                border: none; /* Убираем рамку */
             }
 
             .card {
-                padding: 15px;
+                width: 100%; /* Ширина карточки чуть меньше 100% */
+                min-width: 95vw; /* Минимальная ширина карточки */
+                max-width: none; /* Убираем ограничение на ширину */
+                margin: 0 auto; /* Центрируем карточку */
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             }
 
-            .card h2 {
-                font-size: 1.2rem;
+            .card h2, .card p {
+                overflow-wrap: break-word; /* Перенос длинного текста */
+                word-wrap: break-word;
+                word-break: break-word;
             }
 
-            .card p {
-                font-size: 0.9rem;
+            .card h2, .card p {
+                overflow-wrap: break-word; /* Перенос длинного текста */
+                word-wrap: break-word; /* Совместимость со старыми браузерами */
+                word-break: break-word; /* Для управления переносом текста */
+            }
+        }
+
+        /* Адаптация для узких экранов */
+        @media (max-width: 500px) {
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .card-buttons {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .button-container .button,
+            .card-buttons .button {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
-    <a href="/">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" style="width: 150px; height: auto;" class="logo">
-    </a>
-    <h1>Проблемы</h1>
 
+<!-- Шапка сайта -->
+<header>
+    <a href="/">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" class="logo">
+    </a>
+    {#    <h1>Проблемы</h1>#}
+
+    <!-- Блок для кнопки входа или имени пользователя -->
+    <div class="user-info">
+        {% if g.user_name %}
+            <span class="username">{{ g.user_name }}</span> <!-- Добавленный класс -->
+            <a href="{{ url_for('logout') }}" class="button">Выход</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="button">Вход</a>
+        {% endif %}
+    </div>
+</header>
+
+<!-- Основной контент -->
+<div class="container">
     <!-- Кнопки для переключения вкладок -->
     <div class="button-container">
         <a href="/show?tab=start" class="button">Ждут действий</a>
@@ -156,13 +328,11 @@
     {% if tab == 'start' %}
         <h2>Ждут действий</h2>
         {% for item in start_data %}
-            <!-- Применяем класс в зависимости от значения item[4] -->
             <div class="card {% if item[4] == 'WARN' %}warn{% elif item[4] == 'INFO' %}info{% elif item[4] == 'CRIT' %}crit{% endif %}">
                 <h2>{{ item[0] }}</h2>  <!-- Description -->
                 <p>{{ item[1] }}</p>    <!-- Message -->
                 <p><strong>От:</strong> {{ item[2].strftime('%Y-%m-%d %H:%M:%S') }}</p> <!-- Время -->
 
-                <!-- Кнопки "Редактировать" и "Взяться за решение" -->
                 <div class="card-buttons">
                     <a href="/edit/{{ item[3] }}" class="button">Редактировать</a>
                     <form method="POST" action="/take/{{ item[3] }}" style="margin: 0;">
@@ -180,7 +350,6 @@
                 <p><strong>Ответственный:</strong> {{ item[5] }} </p>
                 <p><strong>От:</strong> {{ item[2].strftime('%Y-%m-%d %H:%M:%S') }}</p> <!-- Время -->
 
-                <!-- Кнопки "Редактировать" и "Решено" -->
                 <div class="card-buttons">
                     <a href="/edit/{{ item[3] }}" class="button">Редактировать</a>
                     <form method="POST" action="/solve/{{ item[3] }}" style="margin: 0;">
@@ -195,24 +364,24 @@
             <div class="card {% if item[4] == 'WARN' %}warn{% elif item[4] == 'INFO' %}info{% elif item[4] == 'CRIT' %}crit{% endif %}">
                 <h2>{{ item[0] }}</h2>  <!-- Description -->
                 <p>{{ item[1] }}</p>    <!-- Message -->
-                <p><strong>Руководил:</strong> {{ item[5] }} </p>
+                <p><strong>Ответственный:</strong> {{ item[5] }} </p>
                 <p><strong>От:</strong> {{ item[2].strftime('%Y-%m-%d %H:%M:%S') }}</p> <!-- Время -->
 
-                <!-- Кнопки "Редактировать" и "Вернуть в процесс" -->
                 <div class="card-buttons">
                     <a href="/edit/{{ item[3] }}" class="button">Редактировать</a>
                     <form method="POST" action="/reopen/{{ item[3] }}" style="margin: 0;">
-                        <input type="submit" value="Вернуть в процесс" class="button">
+                        <input type="submit" value="Вернуть в решение" class="button">
                     </form>
                 </div>
             </div>
         {% endfor %}
     {% endif %}
+</div>
 
-    <!-- Футер -->
-    <footer>
-        <p>&copy; 2024 Система оповещения проблем.</p>
-    </footer>
+<!-- Футер -->
+<footer>
+    <p>&copy; 2024 Все права защищены</p>
+</footer>
 
 </body>
 </html>
